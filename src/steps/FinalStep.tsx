@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { Button } from '../components/Button';
-import { Icon } from '../components/Icon';
-import { StepLayout } from '../components/StepLayout';
+import { VideoPlayer } from '../components/VideoPlayer';
 import { goToFinalCta, isCtaConfigured } from '../quiz/cta';
 import type { QuizAnswers } from '../quiz/types';
 
 interface FinalStepProps {
   answers: QuizAnswers;
-  onRestart: () => void;
 }
 
-export function FinalStep({ answers, onRestart }: FinalStepProps) {
+/** Etapa final em formato VSL: headline → subheadline → vídeo → CTA → aviso. */
+export function FinalStep({ answers }: FinalStepProps) {
   const [redirecting, setRedirecting] = useState(false);
   const [notConfigured, setNotConfigured] = useState(false);
-  // Se o utilizador voltar do checkout (cache do navegador), reactivar o botão.
+  const headingRef = useRef<HTMLHeadingElement>(null);
+
   useEffect(() => {
+    window.scrollTo(0, 0);
+    headingRef.current?.focus({ preventScroll: true });
+    // Se o utilizador voltar do checkout (cache do navegador), reactivar o botão.
     const onShow = () => setRedirecting(false);
     window.addEventListener('pageshow', onShow);
     return () => window.removeEventListener('pageshow', onShow);
   }, []);
-
-  const today = new Date().toLocaleDateString('pt-PT', { day: '2-digit', month: 'long', year: 'numeric' });
 
   const handleCta = () => {
     if (!isCtaConfigured()) {
@@ -33,47 +34,37 @@ export function FinalStep({ answers, onRestart }: FinalStepProps) {
   };
 
   return (
-    <StepLayout
-      eyebrow="Próxima etapa"
-      title="Você pode avançar para a próxima etapa"
-      lead="A sua avaliação inicial foi concluída. Agora pode continuar o processo e conhecer os próximos passos para procurar oportunidades de trabalho em Portugal."
-    >
-      <article class="offer">
-        <div class="offer__top">
-          <span class="offer__badge">
-            <Icon name="spark" size={14} /> Avaliação concluída · {today}
-          </span>
-          <h2 class="offer__title">Auxiliar de Vagas</h2>
-          <p class="offer__route">
-            <span>Moçambique</span>
-            <Icon name="arrowRight" size={18} />
-            <span>Portugal</span>
-          </p>
-        </div>
-        <p class="offer__text">
-          Garanta o seu espaço no Auxiliar de Vagas de Moçambique para Portugal e continue o seu processo ainda hoje.
-        </p>
-
-        <div class="offer__cta">
-          <Button size="lg" pulse={!redirecting} arrow={!redirecting} onClick={handleCta} disabled={redirecting}>
-            {redirecting ? 'A abrir…' : 'Garantir o meu espaço agora'}
-          </Button>
-          {notConfigured && (
-            <p class="field__error" role="alert">
-              O link de inscrição ainda não está disponível. Tente novamente mais tarde.
-            </p>
-          )}
-        </div>
-      </article>
-
-      <p class="legal">
-        Esta avaliação inicial não representa uma garantia de contratação. A seleção final depende das vagas
-        disponíveis, requisitos e processos de recrutamento aplicáveis.
+    <section class="vsl">
+      <h1 class="vsl__title" ref={headingRef} tabIndex={-1}>
+        Assista ao vídeo e descubra como avançar para oportunidades de trabalho em Portugal
+      </h1>
+      <p class="vsl__sub">
+        Veja as informações importantes antes de garantir o seu espaço no Auxiliar de Vagas —{' '}
+        <span class="nowrap">Moçambique → Portugal.</span>
       </p>
 
-      <button type="button" class="text-link" onClick={onRestart}>
-        Refazer a avaliação
-      </button>
-    </StepLayout>
+      <div class="vsl__video">
+        <VideoPlayer />
+      </div>
+
+      <div class="vsl__cta">
+        <Button size="lg" pulse={!redirecting} arrow={!redirecting} onClick={handleCta} disabled={redirecting}>
+          {redirecting ? 'A abrir…' : 'Garantir o meu espaço agora'}
+        </Button>
+        {notConfigured && (
+          <p class="vsl__error" role="alert">
+            O link de inscrição ainda não está disponível. Tente novamente mais tarde.
+          </p>
+        )}
+      </div>
+
+      <div class="vsl__info">
+        <p class="vsl__note">Continue apenas se as informações apresentadas fizerem sentido para o seu perfil.</p>
+        <p class="vsl__legal">
+          A avaliação inicial não representa uma garantia de contratação. A seleção final depende das oportunidades
+          disponíveis, requisitos e processos de recrutamento.
+        </p>
+      </div>
+    </section>
   );
 }

@@ -17,7 +17,7 @@ import { Header } from './Header';
 
 export function QuizContainer() {
   const quiz = useQuiz();
-  const { state, update, next, jump, back, reset } = quiz;
+  const { state, update, next, jump, back } = quiz;
   const { step, answers } = state;
 
   const position = getProgressPosition(step);
@@ -118,14 +118,15 @@ export function QuizContainer() {
         );
 
       case 'final':
-        return <FinalStep answers={answers} onRestart={reset} />;
+        return <FinalStep answers={answers} />;
     }
   };
 
   const isWelcome = step === 'welcome';
+  const variant = isWelcome ? ' app--welcome' : step === 'final' ? ' app--final' : '';
 
   return (
-    <div class={`app${isWelcome ? ' app--welcome' : ''}`}>
+    <div class={`app${variant}`}>
       {!isWelcome && <Header progress={progress} onBack={canGoBack(state) ? back : undefined} />}
       <main class="stage" id="conteudo">
         {/* key força a remontagem → animação de entrada a cada etapa */}

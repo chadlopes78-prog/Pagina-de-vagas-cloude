@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { parseVideoUrl } from './video';
 import { eurToMzn, formatEur, formatMzn } from './currency';
 import { validateCvFile } from './cvUpload';
 import { canGoBack, getNextStep, goBack, goNext, goTo } from './navigation';
@@ -139,5 +140,31 @@ describe('navegação', () => {
     const declined = goTo(state(), 'declined');
     expect(declined.step).toBe('declined');
     expect(goBack(declined).step).toBe('welcome');
+  });
+});
+
+describe('vídeo', () => {
+  it('vazio ou inválido mostra placeholder', () => {
+    expect(parseVideoUrl('').kind).toBe('none');
+    expect(parseVideoUrl('isto não é url').kind).toBe('none');
+    expect(parseVideoUrl('javascript:alert(1)').kind).toBe('none');
+  });
+  it('YouTube em vários formatos', () => {
+    for (const u of [
+      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      'https://youtu.be/dQw4w9WgXcQ',
+      'https://youtube.com/shorts/dQw4w9WgXcQ',
+      'https://m.youtube.com/watch?v=dQw4w9WgXcQ&t=10',
+    ]) {
+      const v = parseVideoUrl(u);
+      expect(v.kind).toBe('youtube');
+      if (v.kind === 'youtube') expect(v.id).toBe('dQw4w9WgXcQ');
+    }
+  });
+  it('Vimeo, ficheiro e iframe genérico', () => {
+    expect(parseVideoUrl('https://vimeo.com/123456789').kind).toBe('vimeo');
+    expect(parseVideoUrl('videos/vsl.mp4').kind).toBe('file');
+    expect(parseVideoUrl('https://cdn.exemplo.com/a.webm?x=1').kind).toBe('file');
+    expect(parseVideoUrl('https://player.exemplo.com/embed/abc').kind).toBe('iframe');
   });
 });

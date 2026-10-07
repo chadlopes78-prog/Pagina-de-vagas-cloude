@@ -13,15 +13,36 @@ const env = import.meta.env;
  *
  * Pode definir directamente nesta constante ou, de preferência, através
  * da variável de ambiente VITE_FINAL_CTA_URL (ficheiro .env).
- * Enquanto estiver vazio, o botão mostra um aviso em vez de redirecionar.
+ * VITE_FINAL_CTA_URL, se definido, tem prioridade sobre o valor abaixo.
  */
-export const FINAL_CTA_URL: string = (env.VITE_FINAL_CTA_URL as string | undefined)?.trim() || '';
+export const FINAL_CTA_URL: string =
+  (env.VITE_FINAL_CTA_URL as string | undefined)?.trim() || 'https://pay.lojou.app/lzf7x';
 
 /**
  * Se true, acrescenta ao FINAL_CTA_URL os parâmetros ?score=..&province=..
  * (útil para o checkout/CRM saber de onde vem o lead). Nome nunca é enviado.
  */
 export const FINAL_CTA_APPEND_PARAMS = false;
+
+/**
+ * VÍDEO DA ETAPA FINAL.
+ *
+ * >>> COLOQUE AQUI O URL DO VÍDEO <<<  (ou use VITE_VIDEO_URL no .env)
+ *
+ * Aceita:
+ *  - YouTube:  https://www.youtube.com/watch?v=ID  ·  https://youtu.be/ID  ·  /shorts/ID
+ *  - Vimeo:    https://vimeo.com/123456789
+ *  - Ficheiro: https://.../video.mp4 (ou .webm, .mov, .m4v) — ou um ficheiro em public/, ex.: 'videos/vsl.mp4'
+ *  - Outro player com link de incorporação (iframe): ex. https://player.exemplo.com/embed/abc
+ * Vazio = mostra um placeholder elegante.
+ */
+export const VIDEO_URL: string = (env.VITE_VIDEO_URL as string | undefined)?.trim() || '';
+
+/** Imagem de capa opcional (usada em ficheiros de vídeo e no Vimeo/iframe antes de tocar). */
+export const VIDEO_POSTER_URL: string = (env.VITE_VIDEO_POSTER_URL as string | undefined)?.trim() || '';
+
+/** Proporção do vídeo: '16 / 9' (horizontal) ou '9 / 16' (vertical, estilo reels). */
+export const VIDEO_ASPECT_RATIO: '16 / 9' | '9 / 16' | '4 / 5' | '1 / 1' = '16 / 9';
 
 /**
  * Taxa de câmbio EUR → MZN usada APENAS para os exemplos ilustrativos de salário.
