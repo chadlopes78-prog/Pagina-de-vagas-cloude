@@ -1,10 +1,19 @@
 import type { ComponentChildren } from 'preact';
 import { useState } from 'preact/hooks';
-import { VIDEO_ASPECT_RATIO, VIDEO_POSTER_URL } from '../config';
+import { VIDEO_ASPECT_RATIO, VIDEO_FALLBACK_URL, VIDEO_POSTER_URL } from '../config';
 import { parseVideoUrl, type VideoSource } from '../quiz/video';
 
 const IFRAME_ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
 const TITLE = 'Vídeo: como avançar para oportunidades de trabalho em Portugal';
+
+/** Tipo MIME a partir da extensão, para o navegador escolher a fonte que consegue tocar. */
+function mimeFor(src: string): string | undefined {
+  const ext = src.split(/[?#]/)[0].split('.').pop()?.toLowerCase();
+  if (ext === 'webm') return 'video/webm';
+  if (ext === 'ogv') return 'video/ogg';
+  if (ext === 'mp4' || ext === 'm4v') return 'video/mp4';
+  return undefined;
+}
 
 function PlayIcon() {
   return (
@@ -20,10 +29,13 @@ function PlayIcon() {
  */
 export function VideoPlayer({ source = parseVideoUrl() }: { source?: VideoSource }) {
   const [playing, setPlaying] = useState(false);
-  const vertical = VIDEO_ASPECT_RATIO === '9 / 16' || VIDEO_ASPECT_RATIO === '4 / 5';
+  /** Proporção real do ficheiro de vídeo (lida dos metadados); senão usa a configurada. */
+  const [fileRatio, setFileRatio] = useState<{ w: number; h: number } | null>(null);
+  const ratio = fileRatio ? `${fileRatio.w} / ${fileRatio.h}` : VIDEO_ASPECT_RATIO;
+  const vertical = fileRatio ? fileRatio.h > fileRatio.w : VIDEO_ASPECT_RATIO === '9 / 16' || VIDEO_ASPECT_RATIO === '4 / 5';
 
   const frame = (content: ComponentChildren, extra = '') => (
-    <div class={`video${vertical ? ' video--vertical' : ''}${extra}`} style={{ aspectRatio: VIDEO_ASPECT_RATIO }}>
+    <div class={`video${vertical ? ' video--vertical' : ''}${extra}`} style={{ aspectRatio: ratio }}>
       {content}
     </div>
   );
@@ -45,13 +57,18 @@ export function VideoPlayer({ source = parseVideoUrl() }: { source?: VideoSource
       return frame(
         <video
           class="video__media"
-          src={source.src}
           poster={VIDEO_POSTER_URL || undefined}
           controls
           playsInline
           preload="metadata"
           controlsList="nodownload"
+          onLoadedMetadata={(e) => {
+            const { videoWidth: w, videoHeight: h } = e.currentTarget;
+            if (w > 0 && h > 0) setFileRatio({ w, h });
+          }}
         >
+          <source src={source.src} type={mimeFor(source.src)} />
+          {VIDEO_FALLBACK_URL && <source src={VIDEO_FALLBACK_URL} type={mimeFor(VIDEO_FALLBACK_URL)} />}
           O seu navegador não suporta a reprodução deste vídeo.
         </video>,
       );

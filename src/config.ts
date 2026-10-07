@@ -35,11 +35,21 @@ export const FINAL_CTA_APPEND_PARAMS = false;
  *  - Ficheiro: https://.../video.mp4 (ou .webm, .mov, .m4v) — ou um ficheiro em public/, ex.: 'videos/vsl.mp4'
  *  - Outro player com link de incorporação (iframe): ex. https://player.exemplo.com/embed/abc
  * Vazio = mostra um placeholder elegante.
+ *
+ * Vídeo actual: public/videos/vsl.mp4 (720p, H.264/AAC, faststart).
  */
-export const VIDEO_URL: string = (env.VITE_VIDEO_URL as string | undefined)?.trim() || '';
+export const VIDEO_URL: string = (env.VITE_VIDEO_URL as string | undefined)?.trim() || 'videos/vsl.mp4';
+
+/**
+ * Versão alternativa do mesmo vídeo (WebM), usada só se o navegador não reproduzir o MP4.
+ * Deixe vazio se não tiver uma.
+ */
+export const VIDEO_FALLBACK_URL: string =
+  (env.VITE_VIDEO_FALLBACK_URL as string | undefined)?.trim() || 'videos/vsl.webm';
 
 /** Imagem de capa opcional (usada em ficheiros de vídeo e no Vimeo/iframe antes de tocar). */
-export const VIDEO_POSTER_URL: string = (env.VITE_VIDEO_POSTER_URL as string | undefined)?.trim() || '';
+export const VIDEO_POSTER_URL: string =
+  (env.VITE_VIDEO_POSTER_URL as string | undefined)?.trim() || 'videos/vsl-poster.jpg';
 
 /** Proporção do vídeo: '16 / 9' (horizontal) ou '9 / 16' (vertical, estilo reels). */
 export const VIDEO_ASPECT_RATIO: '16 / 9' | '9 / 16' | '4 / 5' | '1 / 1' = '16 / 9';
