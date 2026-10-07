@@ -54,7 +54,7 @@ export const MIN_AGE = 18;
 export const MAX_AGE = 65;
 
 /** Imagem da primeira tela. Substitua por uma fotografia (ex.: '/images/lisboa.jpg'). */
-export const HERO_IMAGE_URL = '/images/lisboa.svg';
+export const HERO_IMAGE_URL = `${import.meta.env.BASE_URL}images/lisboa.svg`;
 
 /** Chave do localStorage para guardar o progresso do quiz. */
 export const STORAGE_KEY = 'auxiliar-vagas-quiz:v1';
