@@ -32,7 +32,7 @@ Tudo está em **`src/config.ts`** ou num ficheiro `.env` (ver `.env.example`):
 | Valores dos exemplos de salário | `SALARY_EXAMPLES_EUR` |
 | Endpoint para receber o currículo (opcional) | `VITE_CV_UPLOAD_ENDPOINT` |
 | Tamanho máximo / formatos do currículo | `CV_MAX_SIZE_MB`, `CV_ACCEPTED_EXTENSIONS` |
-| Imagem da primeira tela | `HERO_IMAGE_URL` (por omissão, a ilustração `public/images/lisboa.svg`) |
+| Fotografia da primeira tela | ficheiros `public/images/lisboa*.jpg/.webp` (caminhos em `HERO_IMAGE`, `src/config.ts`) |
 | Critérios e pesos da pontuação | `SCORE_WEIGHTS` em `src/quiz/score.ts` |
 
 Sem VTurb nem `VIDEO_URL`, a etapa final mostra um placeholder no lugar do vídeo.

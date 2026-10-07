@@ -1,7 +1,7 @@
 import { useEffect } from 'preact/hooks';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
-import { HERO_IMAGE_URL } from '../config';
+import { HERO_IMAGE } from '../config';
 
 interface WelcomeStepProps {
   onYes: () => void;
@@ -14,14 +14,19 @@ export function WelcomeStep({ onYes, onNo }: WelcomeStepProps) {
   return (
     <section class="welcome">
       <div class="welcome__media">
-        <img
-          src={HERO_IMAGE_URL}
-          alt="Vista de Lisboa ao entardecer, com a Ponte 25 de Abril sobre o rio Tejo"
-          width={1200}
-          height={900}
-          fetchPriority="high"
-          decoding="async"
-        />
+        <picture>
+          <source type="image/webp" srcSet={HERO_IMAGE.srcSetWebp} sizes="(min-width: 900px) 55vw, 100vw" />
+          <img
+            src={HERO_IMAGE.src}
+            srcSet={HERO_IMAGE.srcSetJpg}
+            sizes="(min-width: 900px) 55vw, 100vw"
+            alt={HERO_IMAGE.alt}
+            width={HERO_IMAGE.width}
+            height={HERO_IMAGE.height}
+            fetchPriority="high"
+            decoding="async"
+          />
+        </picture>
         <span class="welcome__tag">
           <span class="flag-dot" aria-hidden="true" />
           Lisboa, Portugal

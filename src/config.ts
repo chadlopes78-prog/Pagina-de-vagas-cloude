@@ -87,8 +87,19 @@ export const CV_UPLOAD_ENDPOINT: string = (env.VITE_CV_UPLOAD_ENDPOINT as string
 export const MIN_AGE = 18;
 export const MAX_AGE = 65;
 
-/** Imagem da primeira tela. Substitua por uma fotografia (ex.: '/images/lisboa.jpg'). */
-export const HERO_IMAGE_URL = `${import.meta.env.BASE_URL}images/lisboa.svg`;
+/**
+ * Fotografia da primeira tela (Lisboa). Para trocar, substitua os ficheiros em public/images/
+ * mantendo os nomes, ou altere os caminhos abaixo. O WebP é usado quando o navegador suporta.
+ */
+const IMG = `${import.meta.env.BASE_URL}images/`;
+export const HERO_IMAGE = {
+  src: `${IMG}lisboa.jpg`,
+  srcSetJpg: `${IMG}lisboa-800.jpg 800w, ${IMG}lisboa.jpg 1248w`,
+  srcSetWebp: `${IMG}lisboa-800.webp 800w, ${IMG}lisboa.webp 1248w`,
+  width: 1248,
+  height: 702,
+  alt: 'Lisboa: o Castelo de São Jorge, o casario colorido e o rio Tejo',
+};
 
 /**
  * MODO PREVIEW (VITE_PREVIEW_MODE=true) — apenas para demonstração/testes:

@@ -358,11 +358,16 @@
   background: #e9dccb;
 }
 
+.welcome__media picture {
+  display: contents;
+}
+
 .welcome__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 62%;
+  /* No telemóvel (recorte vertical) mantém o castelo e o casario em destaque. */
+  object-position: 30% 40%;
 }
 
 .welcome__media::after {
