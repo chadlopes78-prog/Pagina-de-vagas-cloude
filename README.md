@@ -26,7 +26,8 @@ Tudo está em **`src/config.ts`** ou num ficheiro `.env` (ver `.env.example`):
 | O quê | Onde |
 |---|---|
 | URL do checkout do botão "GARANTIR O MEU ESPAÇO AGORA" | `VITE_FINAL_CTA_URL` (ou `FINAL_CTA_URL` em `src/config.ts`) |
-| Vídeo da etapa final (YouTube, Vimeo, .mp4 ou link de incorporação) | `VITE_VIDEO_URL` (ou `VIDEO_URL`); proporção em `VIDEO_ASPECT_RATIO` |
+| Vídeo da etapa final (player VTurb) | `VTURB_PLAYER_ID` e `VTURB_SCRIPT_URL` em `src/config.ts` (ou `VITE_VTURB_PLAYER_ID` / `VITE_VTURB_SCRIPT_URL`) |
+| Alternativa à VTurb (YouTube, Vimeo, .mp4) | `VIDEO_URL` / `VITE_VIDEO_URL` |
 | Taxa EUR → MZN dos exemplos de salário | `VITE_EUR_TO_MZN_RATE` (ou `DEFAULT_EUR_TO_MZN_RATE`) |
 | Valores dos exemplos de salário | `SALARY_EXAMPLES_EUR` |
 | Endpoint para receber o currículo (opcional) | `VITE_CV_UPLOAD_ENDPOINT` |
@@ -34,7 +35,7 @@ Tudo está em **`src/config.ts`** ou num ficheiro `.env` (ver `.env.example`):
 | Imagem da primeira tela | `HERO_IMAGE_URL` (por omissão, a ilustração `public/images/lisboa.svg`) |
 | Critérios e pesos da pontuação | `SCORE_WEIGHTS` em `src/quiz/score.ts` |
 
-Sem `VITE_VIDEO_URL`, a etapa final mostra um placeholder no lugar do vídeo.
+Sem VTurb nem `VIDEO_URL`, a etapa final mostra um placeholder no lugar do vídeo.
 Enquanto `VITE_FINAL_CTA_URL` estiver vazio, o botão final mostra um aviso em vez de redirecionar.
 Sem `VITE_CV_UPLOAD_ENDPOINT`, o currículo é apenas validado no navegador e não é enviado para nenhum servidor.
 
@@ -53,7 +54,7 @@ src/
     currency.ts             conversão EUR/MZN
     cvUpload.ts             validação e envio do currículo
     cta.ts                  redirecionamento final
-    video.ts                deteção do tipo de vídeo (YouTube, Vimeo, ficheiro, iframe)
+    video.ts                fonte do vídeo (VTurb, YouTube, Vimeo, ficheiro, iframe)
   components/               QuizContainer, VideoPlayer, Header, ProgressBar, ChoiceGroup, Button, StepLayout, Icon
   steps/                    uma etapa por ficheiro
   styles/                   tokens, base, estilos do quiz

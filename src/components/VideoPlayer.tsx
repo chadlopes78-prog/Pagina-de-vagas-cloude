@@ -1,7 +1,7 @@
-import type { ComponentChildren } from 'preact';
-import { useState } from 'preact/hooks';
+import { h, type ComponentChildren } from 'preact';
+import { useEffect, useState } from 'preact/hooks';
 import { VIDEO_ASPECT_RATIO, VIDEO_FALLBACK_URL, VIDEO_POSTER_URL } from '../config';
-import { parseVideoUrl, type VideoSource } from '../quiz/video';
+import { getVideoSource, loadScriptOnce, type VideoSource } from '../quiz/video';
 
 const IFRAME_ALLOW = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen';
 const TITLE = 'Vídeo: como avançar para oportunidades de trabalho em Portugal';
@@ -27,8 +27,13 @@ function PlayIcon() {
  * Player responsivo da etapa final. O YouTube usa uma "capa" leve e só carrega
  * o player ao tocar (poupa dados e acelera a página em Android de baixo custo).
  */
-export function VideoPlayer({ source = parseVideoUrl() }: { source?: VideoSource }) {
+export function VideoPlayer({ source = getVideoSource() }: { source?: VideoSource }) {
   const [playing, setPlaying] = useState(false);
+  const vturbScript = source.kind === 'vturb' ? source.scriptUrl : '';
+
+  useEffect(() => {
+    if (vturbScript) loadScriptOnce(vturbScript);
+  }, [vturbScript]);
   /** Proporção real do ficheiro de vídeo (lida dos metadados); senão usa a configurada. */
   const [fileRatio, setFileRatio] = useState<{ w: number; h: number } | null>(null);
   const ratio = fileRatio ? `${fileRatio.w} / ${fileRatio.h}` : VIDEO_ASPECT_RATIO;
@@ -41,6 +46,21 @@ export function VideoPlayer({ source = parseVideoUrl() }: { source?: VideoSource
   );
 
   switch (source.kind) {
+    case 'vturb':
+      // Mesmo HTML do código de incorporação da VTurb; o script substitui o placeholder pelo player.
+      return (
+        <div class="video video--vturb">
+          {h(
+            'vturb-smartplayer',
+            { id: `vid-${source.playerId}`, style: 'display: block; margin: 0 auto; width: 100%;' },
+            <div
+              class="vturb-player-placeholder"
+              style="position: relative; width: 100%; padding: 56.25% 0 0; z-index: 0; background-color: black;"
+            />,
+          )}
+        </div>
+      );
+
     case 'none':
       return frame(
         <div class="video__placeholder" role="img" aria-label="Vídeo em breve">

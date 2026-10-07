@@ -1,7 +1,8 @@
-import { VIDEO_URL } from '../config';
+import { VIDEO_URL, VTURB_PLAYER_ID, VTURB_SCRIPT_URL } from '../config';
 
 export type VideoSource =
   | { kind: 'none' }
+  | { kind: 'vturb'; playerId: string; scriptUrl: string }
   | { kind: 'youtube'; id: string; embedUrl: string; thumbnailUrl: string }
   | { kind: 'vimeo'; id: string; embedUrl: string }
   | { kind: 'file'; src: string }
@@ -59,4 +60,32 @@ export function parseVideoUrl(raw: string = VIDEO_URL): VideoSource {
   }
 
   return { kind: 'iframe', embedUrl: url.toString() };
+}
+
+/** ID do player VTurb: aceita "6ac6..." ou "vid-6ac6...". */
+export function normalizeVturbId(raw: string): string {
+  return raw.trim().replace(/^vid-/, '');
+}
+
+/** Fonte de vídeo da etapa final: VTurb tem prioridade; senão VIDEO_URL. */
+export function getVideoSource(
+  vturbId: string = VTURB_PLAYER_ID,
+  vturbScript: string = VTURB_SCRIPT_URL,
+  videoUrl: string = VIDEO_URL,
+): VideoSource {
+  const playerId = normalizeVturbId(vturbId);
+  if (playerId && /^[\w-]+$/.test(playerId) && /^https:\/\//.test(vturbScript.trim())) {
+    return { kind: 'vturb', playerId, scriptUrl: vturbScript.trim() };
+  }
+  return parseVideoUrl(videoUrl);
+}
+
+/** Carrega um script externo uma única vez (o player VTurb reutiliza-o se a etapa voltar a abrir). */
+export function loadScriptOnce(src: string): void {
+  if (typeof document === 'undefined') return;
+  if (document.querySelector(`script[src="${CSS.escape(src)}"]`)) return;
+  const s = document.createElement('script');
+  s.src = src;
+  s.async = true;
+  document.head.appendChild(s);
 }

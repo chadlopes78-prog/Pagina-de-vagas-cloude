@@ -25,31 +25,34 @@ export const FINAL_CTA_URL: string =
 export const FINAL_CTA_APPEND_PARAMS = false;
 
 /**
- * VÍDEO DA ETAPA FINAL.
+ * VÍDEO DA ETAPA FINAL — PLAYER VTURB (ConverteAI).
  *
- * >>> COLOQUE AQUI O URL DO VÍDEO <<<  (ou use VITE_VIDEO_URL no .env)
+ * >>> PARA TROCAR O VÍDEO, ALTERE ESTES DOIS VALORES <<<
+ * Copie-os do código de incorporação da VTurb:
+ *   <vturb-smartplayer id="vid-XXXX">  →  VTURB_PLAYER_ID = 'XXXX'
+ *   s.src="https://scripts.converteai.net/.../player.js"  →  VTURB_SCRIPT_URL
+ * (ou use VITE_VTURB_PLAYER_ID e VITE_VTURB_SCRIPT_URL no .env)
  *
- * Aceita:
- *  - YouTube:  https://www.youtube.com/watch?v=ID  ·  https://youtu.be/ID  ·  /shorts/ID
- *  - Vimeo:    https://vimeo.com/123456789
- *  - Ficheiro: https://.../video.mp4 (ou .webm, .mov, .m4v) — ou um ficheiro em public/, ex.: 'videos/vsl.mp4'
- *  - Outro player com link de incorporação (iframe): ex. https://player.exemplo.com/embed/abc
- * Vazio = mostra um placeholder elegante.
- *
- * Vídeo actual: public/videos/vsl.mp4 (720p, H.264/AAC, faststart).
+ * Se ficarem vazios, é usado VIDEO_URL (abaixo).
  */
-export const VIDEO_URL: string = (env.VITE_VIDEO_URL as string | undefined)?.trim() || 'videos/vsl.mp4';
+export const VTURB_PLAYER_ID: string =
+  (env.VITE_VTURB_PLAYER_ID as string | undefined)?.trim() || '6ac68d14da9cef979b95782d';
+export const VTURB_SCRIPT_URL: string =
+  (env.VITE_VTURB_SCRIPT_URL as string | undefined)?.trim() ||
+  'https://scripts.converteai.net/8b709eb2-af1f-4db8-b427-9ada800973a9/players/6ac68d14da9cef979b95782d/v4/player.js';
 
 /**
- * Versão alternativa do mesmo vídeo (WebM), usada só se o navegador não reproduzir o MP4.
- * Deixe vazio se não tiver uma.
+ * Alternativa à VTurb: URL de vídeo (usado só se a VTurb não estiver configurada).
+ * Aceita YouTube, Vimeo, ficheiro .mp4/.webm (ex.: 'videos/vsl.mp4' em public/) ou link de incorporação.
+ * Vazio = mostra um placeholder elegante.
  */
-export const VIDEO_FALLBACK_URL: string =
-  (env.VITE_VIDEO_FALLBACK_URL as string | undefined)?.trim() || 'videos/vsl.webm';
+export const VIDEO_URL: string = (env.VITE_VIDEO_URL as string | undefined)?.trim() || '';
 
-/** Imagem de capa opcional (usada em ficheiros de vídeo e no Vimeo/iframe antes de tocar). */
-export const VIDEO_POSTER_URL: string =
-  (env.VITE_VIDEO_POSTER_URL as string | undefined)?.trim() || 'videos/vsl-poster.jpg';
+/** Versão WebM de reserva para VIDEO_URL em ficheiro (opcional). */
+export const VIDEO_FALLBACK_URL: string = (env.VITE_VIDEO_FALLBACK_URL as string | undefined)?.trim() || '';
+
+/** Imagem de capa opcional para VIDEO_URL. */
+export const VIDEO_POSTER_URL: string = (env.VITE_VIDEO_POSTER_URL as string | undefined)?.trim() || '';
 
 /** Proporção do vídeo: '16 / 9' (horizontal) ou '9 / 16' (vertical, estilo reels). */
 export const VIDEO_ASPECT_RATIO: '16 / 9' | '9 / 16' | '4 / 5' | '1 / 1' = '16 / 9';

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseVideoUrl } from './video';
+import { getVideoSource, parseVideoUrl } from './video';
 import { eurToMzn, formatEur, formatMzn } from './currency';
 import { validateCvFile } from './cvUpload';
 import { canGoBack, getNextStep, goBack, goNext, goTo } from './navigation';
@@ -166,5 +166,18 @@ describe('vídeo', () => {
     expect(parseVideoUrl('videos/vsl.mp4').kind).toBe('file');
     expect(parseVideoUrl('https://cdn.exemplo.com/a.webm?x=1').kind).toBe('file');
     expect(parseVideoUrl('https://player.exemplo.com/embed/abc').kind).toBe('iframe');
+  });
+});
+
+describe('VTurb', () => {
+  const script = 'https://scripts.converteai.net/abc/players/6ac68d14da9cef979b95782d/v4/player.js';
+  it('tem prioridade sobre VIDEO_URL e aceita o prefixo vid-', () => {
+    const v = getVideoSource('vid-6ac68d14da9cef979b95782d', script, 'https://youtu.be/dQw4w9WgXcQ');
+    expect(v).toEqual({ kind: 'vturb', playerId: '6ac68d14da9cef979b95782d', scriptUrl: script });
+  });
+  it('sem VTurb usa VIDEO_URL ou o placeholder', () => {
+    expect(getVideoSource('', '', 'https://youtu.be/dQw4w9WgXcQ').kind).toBe('youtube');
+    expect(getVideoSource('', '', '').kind).toBe('none');
+    expect(getVideoSource('abc', 'http://inseguro.com/p.js', '').kind).toBe('none');
   });
 });

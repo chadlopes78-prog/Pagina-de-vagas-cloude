@@ -1612,3 +1612,14 @@
   font-size: 12px;
   font-weight: 700;
 }
+
+/* Player VTurb: a altura é definida pelo próprio player (placeholder 16:9 até carregar). */
+.video--vturb {
+  aspect-ratio: auto;
+  background: #000;
+}
+
+.video--vturb vturb-smartplayer {
+  display: block;
+  width: 100%;
+}
