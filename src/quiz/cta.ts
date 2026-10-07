@@ -1,4 +1,4 @@
-import { FINAL_CTA_APPEND_PARAMS, FINAL_CTA_URL } from '../config';
+import { FINAL_CTA_APPEND_PARAMS, FINAL_CTA_URL, PREVIEW_MODE } from '../config';
 import type { QuizAnswers } from './types';
 
 export function isCtaConfigured(): boolean {
@@ -25,6 +25,14 @@ export function goToFinalCta(answers: QuizAnswers): boolean {
   if (!url) {
     console.warn('[Quiz] FINAL_CTA_URL não está configurado. Defina VITE_FINAL_CTA_URL ou edite src/config.ts.');
     return false;
+  }
+  // Na preview (dentro de uma moldura) o checkout abre num novo separador.
+  if (PREVIEW_MODE) {
+    const tab = window.open(url, '_blank');
+    if (tab) {
+      tab.opener = null;
+      return true;
+    }
   }
   window.location.assign(url);
   return true;

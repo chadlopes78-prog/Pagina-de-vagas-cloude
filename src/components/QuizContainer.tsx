@@ -1,3 +1,4 @@
+import { PREVIEW_MODE } from '../config';
 import { uploadCv } from '../quiz/cvUpload';
 import { canGoBack, getProgressPosition, TOTAL_PROGRESS_STEPS } from '../quiz/navigation';
 import { calculateScore } from '../quiz/score';
@@ -14,10 +15,11 @@ import { ScoreResultStep } from '../steps/ScoreResultStep';
 import { WelcomeStep } from '../steps/WelcomeStep';
 import { YesNoStep } from '../steps/YesNoStep';
 import { Header } from './Header';
+import { PreviewBar } from './PreviewBar';
 
 export function QuizContainer() {
   const quiz = useQuiz();
-  const { state, update, next, jump, back } = quiz;
+  const { state, update, next, jump, back, reset } = quiz;
   const { step, answers } = state;
 
   const position = getProgressPosition(step);
@@ -127,6 +129,14 @@ export function QuizContainer() {
 
   return (
     <div class={`app${variant}`}>
+      {PREVIEW_MODE && (
+        <PreviewBar
+          onRestart={() => {
+            reset();
+            window.scrollTo(0, 0);
+          }}
+        />
+      )}
       {!isWelcome && <Header progress={progress} onBack={canGoBack(state) ? back : undefined} />}
       <main class="stage" id="conteudo">
         {/* key força a remontagem → animação de entrada a cada etapa */}

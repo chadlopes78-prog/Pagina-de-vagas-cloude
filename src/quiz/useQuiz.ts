@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
+import { PREVIEW_MODE } from '../config';
 import { goBack, goNext, goTo } from './navigation';
 import { clearState, INITIAL_STATE, loadState, saveState } from './persistence';
 import type { QuizAnswers, QuizState, StepId } from './types';
@@ -22,11 +23,13 @@ export interface QuizApi {
  * e integração com o botão "voltar" do navegador/Android (sem reload).
  */
 export function useQuiz(): QuizApi {
-  const [state, setState] = useState<QuizState>(loadState);
+  const [state, setState] = useState<QuizState>(() => (PREVIEW_MODE ? INITIAL_STATE : loadState()));
   /** Entradas que este quiz adicionou ao histórico do navegador. */
   const pushed = useRef(0);
 
-  useEffect(() => saveState(state), [state]);
+  useEffect(() => {
+    if (!PREVIEW_MODE) saveState(state);
+  }, [state]);
 
   useEffect(() => {
     const onPop = () => {

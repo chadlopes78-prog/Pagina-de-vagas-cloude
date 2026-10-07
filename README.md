@@ -11,6 +11,14 @@ npm run build      # typecheck + build de produção (pasta dist/)
 npm test           # testes unitários (pontuação, validação, câmbio, upload, navegação)
 ```
 
+## Preview / demonstração
+
+```bash
+VITE_PREVIEW_MODE=true npm run build && npm run preview
+```
+
+No modo preview o quiz começa sempre na primeira tela, mostra uma faixa com o botão "Recomeçar" e o CTA final abre o checkout num novo separador. Não use este modo no site real.
+
 ## Configuração (sem mexer no resto do código)
 
 Tudo está em **`src/config.ts`** ou num ficheiro `.env` (ver `.env.example`):

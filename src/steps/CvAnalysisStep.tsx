@@ -24,7 +24,7 @@ export function CvAnalysisStep({ fileName, onContinue }: CvAnalysisStepProps) {
     <StepLayout
       center
       eyebrow="Currículo"
-      title={done ? 'Análise concluída' : 'A analisar o seu currículo'}
+      title={done ? 'Análise concluída' : 'Analisando o seu currículo'}
       lead={done ? 'O seu currículo foi analisado com sucesso.' : fileName}
       actions={
         done ? (

@@ -77,6 +77,15 @@ export const MAX_AGE = 65;
 /** Imagem da primeira tela. Substitua por uma fotografia (ex.: '/images/lisboa.jpg'). */
 export const HERO_IMAGE_URL = `${import.meta.env.BASE_URL}images/lisboa.svg`;
 
+/**
+ * MODO PREVIEW (VITE_PREVIEW_MODE=true) — apenas para demonstração/testes:
+ *  - o quiz começa sempre na primeira tela (não retoma progresso guardado)
+ *  - mostra um botão discreto "Recomeçar" no canto superior direito
+ *  - o CTA final abre o checkout num novo separador
+ * Deixe desligado no site real.
+ */
+export const PREVIEW_MODE: boolean = env.VITE_PREVIEW_MODE === 'true';
+
 /** Chave do localStorage para guardar o progresso do quiz. */
 export const STORAGE_KEY = 'auxiliar-vagas-quiz:v1';
 

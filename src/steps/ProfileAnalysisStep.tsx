@@ -8,7 +8,6 @@ const MESSAGES = [
   'A verificar os seus dados…',
   'A avaliar o seu perfil…',
   'A analisar as informações fornecidas…',
-  'A preparar o seu resultado…',
   'Quase concluído…',
 ];
 

@@ -45,7 +45,7 @@ export function ScoreResultStep({ answers, score, onContinue }: ScoreResultStepP
       title="Resultado da sua avaliação"
       actions={
         <Button arrow size="lg" onClick={onContinue}>
-          Ver a próxima etapa
+          Continuar
         </Button>
       }
     >
