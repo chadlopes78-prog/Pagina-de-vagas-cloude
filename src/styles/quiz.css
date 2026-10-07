@@ -1623,3 +1623,32 @@
   display: block;
   width: 100%;
 }
+
+/* Pergunta por responder: destaque breve quando se carrega em "Continuar" sem escolher. */
+.question-block {
+  scroll-margin: 96px 0 120px;
+}
+
+.question-block.needs-answer .choice {
+  border-color: var(--red);
+  animation: nudge 0.5s var(--ease) 0.35s;
+}
+
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}

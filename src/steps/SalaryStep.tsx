@@ -1,9 +1,10 @@
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { Button } from '../components/Button';
 import { ChoiceGroup } from '../components/ChoiceGroup';
 import { StepLayout } from '../components/StepLayout';
 import { EUR_TO_MZN_RATE, SALARY_EXAMPLES_EUR } from '../config';
 import { eurToMzn, formatEur, formatMzn } from '../quiz/currency';
+import { revealUnansweredQuestion } from '../quiz/revealQuestion';
 import type { SalaryOpinion } from '../quiz/types';
 
 interface SalaryStepProps {
@@ -14,6 +15,7 @@ interface SalaryStepProps {
 
 export function SalaryStep({ value, onChange, onContinue }: SalaryStepProps) {
   const [showHint, setShowHint] = useState(false);
+  const questionRef = useRef<HTMLDivElement>(null);
 
   return (
     <StepLayout
@@ -24,7 +26,12 @@ export function SalaryStep({ value, onChange, onContinue }: SalaryStepProps) {
         <Button
           arrow
           onClick={() => {
-            if (!value) return setShowHint(true);
+            if (!value) {
+              // A pergunta fica abaixo dos cartões: levar o utilizador até ela.
+              setShowHint(true);
+              revealUnansweredQuestion(questionRef.current);
+              return;
+            }
             onContinue();
           }}
         >
@@ -46,24 +53,26 @@ export function SalaryStep({ value, onChange, onContinue }: SalaryStepProps) {
         taxa de câmbio oficial.
       </p>
 
-      <ChoiceGroup
-        name="salary"
-        legend="Na sua opinião, estes salários são justos para si?"
-        value={value}
-        onChange={(v) => {
-          setShowHint(false);
-          onChange(v);
-        }}
-        choices={[
-          { value: 'fair', label: 'Sim, são justos' },
-          { value: 'notFair', label: 'Não' },
-        ]}
-      />
-      {showHint && (
-        <p class="field__error" role="alert">
-          Escolha uma opção para continuar.
-        </p>
-      )}
+      <div class="question-block" ref={questionRef}>
+        <ChoiceGroup
+          name="salary"
+          legend="Na sua opinião, estes salários são justos para si?"
+          value={value}
+          onChange={(v) => {
+            setShowHint(false);
+            onChange(v);
+          }}
+          choices={[
+            { value: 'fair', label: 'Sim, são justos' },
+            { value: 'notFair', label: 'Não' },
+          ]}
+        />
+        {showHint && (
+          <p class="field__error" role="alert">
+            Responda a esta pergunta para continuar.
+          </p>
+        )}
+      </div>
     </StepLayout>
   );
 }
